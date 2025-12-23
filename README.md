@@ -19,7 +19,7 @@
    - **TimescaleWriter**: inserts ticks into TimescaleDB hypertables.
 
 5. **Materialized view**
-   - Aggregates OFI per minute (`ofi_per_min`) for fast queries and visualizations.
+   - Aggregates OFI per minute for fast queries and visualizations.
    
 ## Design choices
 
@@ -41,7 +41,7 @@
 
 ## Limitations & Known Issues
 
-- **Price smoothing:** Large sudden price drops or spikes are capped by a fixed percentage, but this should be made dependent on local volatility.
+- **Price smoothing:** Large sudden price drops or spikes are capped by a fixed percentage, but this should be made dependent on local volatility and possibly self-adaptable to market regimes/conditions.
 - **Checks:** more checks should be added to track and asses consistency of time series (e.g.: time std of price series, outlier detection, time-consistency checks,
  time-delta between consecutive ticks, comparison with other markets, ...) 
 - **Single-node limitation:** The collector runs on a single process; high-frequency trading scenarios may require multiple instances.

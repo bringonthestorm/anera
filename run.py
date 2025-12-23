@@ -158,14 +158,23 @@ async def writer(queue: asyncio.Queue):
             buffer.clear()
 
 
-async def main():
+async def main(run_seconds: int = 300): 
     queue = asyncio.Queue(maxsize=10_000)
-    
 
-    await asyncio.gather(
-        collector(queue),
-        writer(queue),
-    )
+    async def run_with_timeout():
+        collector_task = asyncio.create_task(collector(queue))
+        writer_task = asyncio.create_task(writer(queue))
+        tasks = [collector_task, writer_task]
+
+        try:
+            await asyncio.sleep(run_seconds)
+        finally:
+            for t in tasks:
+                t.cancel()
+            await asyncio.gather(*tasks, return_exceptions=True)
+            print(f"Pipeline stopped after {run_seconds} seconds")
+
+    await run_with_timeout()
 
 if __name__ == "__main__":
     asyncio.run(main())

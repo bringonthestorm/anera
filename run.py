@@ -104,7 +104,7 @@ class Writer:
         ORDER BY ts
         """)
 
-        print("✔ ClickHouse ready")
+        print("ClickHouse ready")
 
     def insert_batch(self, rows):
         if not rows:
@@ -126,7 +126,7 @@ async def collector(queue: asyncio.Queue):
     validator = TickValidator(MAX_PRICE_JUMP, QTY_WINDOW_SECONDS)
 
     async with connect(BINANCE_WS_URL) as ws:
-        print("✔ Connected to Binance")
+        print("Connected to Binance")
         while True:
             msg = await ws.recv()
             data = json.loads(msg)

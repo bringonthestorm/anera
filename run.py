@@ -2,7 +2,6 @@ import asyncio
 import json
 from datetime import datetime, timedelta
 from collections import deque
-from metrics import start_metrics_server, INGESTION_LAG, QUEUE_SIZE, OFI_RATE
 
 
 from websockets import connect
@@ -161,18 +160,12 @@ async def writer(queue: asyncio.Queue):
 
 async def main():
     queue = asyncio.Queue(maxsize=10_000)
-    start_metrics_server()
     
 
     await asyncio.gather(
         collector(queue),
         writer(queue),
     )
-
-    await asyncio.sleep(60)
-    for t in tasks:
-        t.cancel()
-    await asyncio.gather(*tasks, return_exceptions=True)
 
 if __name__ == "__main__":
     asyncio.run(main())
